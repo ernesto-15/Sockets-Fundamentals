@@ -14,39 +14,13 @@ const port = process.env.PORT || 8080;
 
 app.use('/', express.static(path.resolve(__dirname, '../public')));
 
-//Comunicacion del backend
-let io = socket(server);
+//Comunicacion del backend - Inicializacion
+module.exports. io = socket(server);
 
-//Conexion del servidor
-io.on('connection', (client) => {
-  console.log('client connected');
+//Configuracion del Socket
+require('./sockets/socket')
 
-  //Enviar informacion
-  client.emit('sendMessage', {
-    user: 'Admin',
-    message: 'Welcome to Sockets',
-  });
-
-  //Desconexion del servidor
-  client.on('disconnect', () => {
-    console.log('client disconnected');
-  });
-
-  //Listen Client
-  client.on('sendMessage', (message, callback) => {
-    console.log(message);
-    if(message.user) {
-      callback({
-        response: 'OK'
-      });
-    } else {
-      callback({
-        response: 'NOOO!!'
-      })
-    }
-  });
-});
-
+//Escuchar al puerto
 server.listen(port, (err) => {
   if (err) throw new Error(err);
   console.log(`Listening to port ${port}`);
